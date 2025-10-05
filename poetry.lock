@@ -1146,42 +1146,45 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pynenc"
-version = "0.1.0"
+version = "0.1.0rc101.dev95"
 description = "A task management system for complex distributed orchestration"
 optional = false
 python-versions = ">=3.11.6"
-files = []
-develop = false
+files = [
+    {file = "pynenc-0.1.0rc101.dev95-py3-none-any.whl", hash = "sha256:aab36fbcbc6874fe3db05c2c6488e176a1045e844b34874c281265838a3e720a"},
+    {file = "pynenc-0.1.0rc101.dev95.tar.gz", hash = "sha256:8f279d41d86c5e8f360ec20f50111e89066a25c5034ebe5168c350edbc93b557"},
+]
 
 [package.dependencies]
 cistell = "0.0.7"
-coverage = {version = ">=7.2.6,<8.0", extras = ["toml"], optional = true}
-croniter = "^6.0.0"
-fastapi = {version = "^0.115.11", optional = true}
-httpx = {version = "^0.27.0", optional = true}
-jinja2 = {version = ">=3.1.4,<4.0.0", optional = true}
-jsonpickle = "^4.1.1"
-mypy = {version = "1.7.0", optional = true}
-pre-commit = {version = "^3.5.0", optional = true}
-psutil = {version = "^7.1.0", optional = true}
-pytest = {version = ">=8.2.0", optional = true}
-pytest-asyncio = {version = "^0.25.3", optional = true}
-pytest-timeout = {version = "^2.2.0", optional = true}
-python-multipart = {version = ">=0.0.6,<0.1.0", optional = true}
+coverage = {version = ">=7.2.6,<8.0", extras = ["toml"], optional = true, markers = "extra == \"tests\""}
+croniter = ">=6.0.0,<7.0.0"
+fastapi = {version = ">=0.115.11,<0.116.0", optional = true, markers = "extra == \"monitor\""}
+httpx = {version = ">=0.27.0,<0.28.0", optional = true, markers = "extra == \"tests\""}
+jinja2 = {version = ">=3.1.4,<4.0.0", optional = true, markers = "extra == \"monitor\""}
+jsonpickle = ">=4.1.1,<5.0.0"
+mypy = {version = "1.7.0", optional = true, markers = "extra == \"tests\""}
+pre-commit = {version = ">=3.5.0,<4.0.0", optional = true, markers = "extra == \"tests\""}
+psutil = {version = ">=7.1.0,<8.0.0", optional = true, markers = "extra == \"tests\""}
+pytest = {version = ">=8.2.0", optional = true, markers = "extra == \"tests\""}
+pytest-asyncio = {version = ">=0.25.3,<0.26.0", optional = true, markers = "extra == \"tests\""}
+pytest-timeout = {version = ">=2.2.0,<3.0.0", optional = true, markers = "extra == \"tests\""}
+python-multipart = {version = ">=0.0.6,<0.1.0", optional = true, markers = "extra == \"monitor\""}
 pyyaml = ">=6.0.1"
-requests = {version = "^2.32.0", optional = true}
-types-PyYAML = {version = "6.0.12.12", optional = true}
-types-requests = {version = "^2.32.0.20250602", optional = true}
-typing-extensions = "^4.9.0"
-uvicorn = {version = "^0.34.0", optional = true}
+requests = {version = ">=2.32.0,<3.0.0", optional = true, markers = "extra == \"tests\""}
+types-PyYAML = {version = "6.0.12.12", optional = true, markers = "extra == \"tests\""}
+types-requests = {version = ">=2.32.0.20250602,<3.0.0.0", optional = true, markers = "extra == \"tests\""}
+typing-extensions = ">=4.9.0,<5.0.0"
+uvicorn = {version = ">=0.34.0,<0.35.0", optional = true, markers = "extra == \"monitor\""}
 
 [package.extras]
 monitor = ["fastapi (>=0.115.11,<0.116.0)", "jinja2 (>=3.1.4,<4.0.0)", "python-multipart (>=0.0.6,<0.1.0)", "uvicorn (>=0.34.0,<0.35.0)"]
 tests = ["coverage[toml] (>=7.2.6,<8.0)", "httpx (>=0.27.0,<0.28.0)", "mypy (==1.7.0)", "pre-commit (>=3.5.0,<4.0.0)", "psutil (>=7.1.0,<8.0.0)", "pytest (>=8.2.0)", "pytest-asyncio (>=0.25.3,<0.26.0)", "pytest-timeout (>=2.2.0,<3.0.0)", "requests (>=2.32.0,<3.0.0)", "types-PyYAML (==6.0.12.12)", "types-requests (>=2.32.0.20250602,<3.0.0.0)"]
 
 [package.source]
-type = "directory"
-url = "../pynenc"
+type = "legacy"
+url = "https://test.pypi.org/simple"
+reference = "testpypi"
 
 [[package]]
 name = "pytest"
@@ -1950,4 +1953,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11.6,<4.0"
-content-hash = "ad3f5b0a514b1a515e9eb631e1bdf9161b729239e74ba7a7b19d6809aec12a33"
+content-hash = "8ec9bc32810630e83e3ad4dc89b0d7cb99240f59cd3ebb3055c642a7566dbeca"
