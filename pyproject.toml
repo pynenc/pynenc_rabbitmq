@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pynenc-rabbitmq"
-version = "0.0.1"
+version = "0.1.0"
 description = "RabbitMq plugin for Pynenc distributed task management system"
 authors = ["Jose Diaz"]
 license = "MIT License"
@@ -25,9 +25,13 @@ rabbitmq_broker = "pynenc_rabbitmq.broker.rabbitmq_broker"
 [tool.poetry.dependencies]
 pika = "1.3.2"
 python = ">=3.11.6,<4.0"
-# pynenc = { version = "0.1.0rc101.dev94", extras = ["monitor", "tests"], source = "testpypi" }
-pynenc = { path = "../pynenc", extras = ["monitor", "tests"] }
+pynenc = { version = "0.1.0rc101.dev95", extras = ["monitor", "tests"], source = "testpypi" }
+# pynenc = { path = "../pynenc", extras = ["monitor", "tests"] }
 
+[[tool.poetry.source]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+priority = "explicit"
 
 [tool.poetry.group.dev.dependencies]
 black = "23.11.0"
