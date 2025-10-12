@@ -108,9 +108,13 @@ def mock_rabbitmq_components() -> "Generator[None, None, None]":
     # Clear singleton instances before each test
     PynencRabbitMqClient._instances.clear()
 
-    with patch(
-        "pynenc_rabbitmq.util.rabbitmq_client.ConnectionManager", MockConnectionManager
-    ), patch("pynenc_rabbitmq.util.rabbitmq_client.QueueManager", MockQueueManager):
+    with (
+        patch(
+            "pynenc_rabbitmq.util.rabbitmq_client.ConnectionManager",
+            MockConnectionManager,
+        ),
+        patch("pynenc_rabbitmq.util.rabbitmq_client.QueueManager", MockQueueManager),
+    ):
         yield
 
     # Clean up after test
