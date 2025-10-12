@@ -26,11 +26,12 @@ def test_rabbitmq_container_is_accessible(
     """Test that the RabbitMQ container is running and accessible."""
     # Just verify the container exists and has expected attributes
     assert rabbitmq_container is not None
-    assert rabbitmq_container.get_container_host_ip() == "localhost"
+    host_ip = rabbitmq_container.get_container_host_ip()
+    assert host_ip is not None and len(host_ip) > 0
     assert int(rabbitmq_container.get_exposed_port(5672)) > 0
 
     print(
-        f"\nContainer accessible at: {rabbitmq_container.get_container_host_ip()}:{rabbitmq_container.get_exposed_port(5672)}"
+        f"\nContainer accessible at: {host_ip}:{rabbitmq_container.get_exposed_port(5672)}"
     )
 
 

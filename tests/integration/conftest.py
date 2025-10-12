@@ -43,19 +43,19 @@ def rabbitmq_container() -> "Generator[RabbitMqContainer, None, None]":
         # Debug: logger.info connection details
         host = container.get_container_host_ip()
         port = container.get_exposed_port(container.port)
-        logger.info(f"\n{'='*80}")
+        logger.info(f"\n{'=' * 80}")
         logger.info("RabbitMQ Container Started:")
         logger.info(f"  Host: {host}")
         logger.info(f"  Port (exposed): {port}")
         logger.info(f"  Port (internal): {container.port}")
         logger.info(f"  Username: {container.username}")
         logger.info(f"  Virtual Host: {container.vhost}")
-        logger.info(f"{'='*80}\n")
+        logger.info(f"{'=' * 80}\n")
 
         # Try to get container logs
         try:
             logs = container.get_logs()
-            logger.info(f"\n{'='*80}\nRabbitMQ Container Logs:\n{'='*80}")
+            logger.info(f"\n{'=' * 80}\nRabbitMQ Container Logs:\n{'=' * 80}")
             if isinstance(logs, tuple) and len(logs) > 0:
                 stdout_logs = (
                     logs[0].decode("utf-8")
