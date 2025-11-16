@@ -22,6 +22,7 @@ class QueueManager:
     ) -> None:
         self._connection_manager = connection_manager
         self._spec = spec
+        self._pending_ack: tuple[object, int] | None = None
 
     def publish_message(self, message: str) -> bool:
         """
@@ -62,13 +63,12 @@ class QueueManager:
 
     def consume_message(self) -> str | None:
         """
-        Consume a single string message from the queue.
+        Consume a single message with manual ack to prevent duplicate processing.
 
         :return: Message string if available, None otherwise
         """
         try:
             with self._connection_manager.get_channel() as channel:
-                # Declare queue
                 channel.queue_declare(
                     queue=self._spec.name,
                     durable=self._spec.durable,
@@ -77,12 +77,14 @@ class QueueManager:
                     arguments=self._spec.arguments,
                 )
 
-                # Get single message
+                # Manual ack prevents race conditions
                 method_frame, _header_frame, body = channel.basic_get(
-                    queue=self._spec.name, auto_ack=True
+                    queue=self._spec.name, auto_ack=False
                 )
 
                 if method_frame and body:
+                    # Acknowledge immediately after successful retrieval
+                    channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                     return body.decode()
                 return None
         except Exception as e:
