@@ -17,7 +17,8 @@ class RabbitMqBroker(BaseBroker):
     A RabbitMq-based implementation of the broker for cross-process coordination.
 
     Uses RabbitMq queues for cross-process message coordination and implements
-    all required abstract methods from BaseBroker.
+    all required abstract methods from BaseBroker. Connection retry with exponential
+    backoff is handled automatically at the queue manager level.
     """
 
     def __init__(self, app: "Pynenc") -> None:
@@ -39,9 +40,7 @@ class RabbitMqBroker(BaseBroker):
 
     def send_message(self, invocation_id: str) -> None:
         """Send a message (invocation) to the queue."""
-        success = self._message_queue.publish_message(invocation_id)
-        if not success:
-            raise RuntimeError(f"Failed to send message for invocation {invocation_id}")
+        self._message_queue.publish_message(invocation_id)
 
     def route_invocation(self, invocation_id: str) -> None:
         """Route a single invocation by sending it to the message queue."""

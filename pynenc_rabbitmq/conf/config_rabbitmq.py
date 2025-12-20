@@ -61,6 +61,19 @@ class ConfigRabbitMq(ConfigPynencBase):
         Log level for pika library logs. Defaults to 'WARNING' to reduce noise.
         Valid values: 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'.
         Set to 'INFO' to see connection details during debugging.
+
+    :cvar ConfigField[int] rabbitmq_retry_max_attempts:
+        Maximum number of retry attempts for RabbitMQ operations. Defaults to 0 (infinite).
+        Set to a positive number to limit retries.
+
+    :cvar ConfigField[float] rabbitmq_retry_initial_delay:
+        Initial delay in seconds before first retry. Defaults to 1.0.
+
+    :cvar ConfigField[float] rabbitmq_retry_max_delay:
+        Maximum delay in seconds between retries. Defaults to 60.0.
+
+    :cvar ConfigField[float] rabbitmq_retry_exponential_base:
+        Base for exponential backoff calculation. Defaults to 2.0.
     """
 
     # Connection settings
@@ -85,3 +98,9 @@ class ConfigRabbitMq(ConfigPynencBase):
     rabbitmq_message_ttl = ConfigField(86400000)  # 24 hours in milliseconds
     rabbitmq_confirm_delivery = ConfigField(True)
     rabbitmq_pika_log_level = ConfigField("WARNING")
+
+    # Retry settings for operations (exponential backoff)
+    rabbitmq_retry_max_attempts = ConfigField(0)  # 0 = infinite
+    rabbitmq_retry_initial_delay = ConfigField(1.0)
+    rabbitmq_retry_max_delay = ConfigField(60.0)
+    rabbitmq_retry_exponential_base = ConfigField(2.0)
