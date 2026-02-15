@@ -102,7 +102,7 @@ def app_combination_instance(
     monkeypatch.setenv("PYNENC__ORCHESTRATOR__CYCLE_CONTROL", "True")
     monkeypatch.setenv("PYNENC__PRINT_ARGUMENTS", "False")
 
-    # Use a temporary SQLite DB for state backend and arg cache
+    # Use a temporary SQLite DB for state backend and client data store
     monkeypatch.setenv(
         "PYNENC__SQLITE_DB_PATH", app_instance_builder._config["sqlite_db_path"]
     )
@@ -112,7 +112,7 @@ def app_combination_instance(
 
     # Set additional environment variables for subprocess components
     monkeypatch.setenv(
-        "PYNENC__ARG_CACHE_CLS", app_instance.arg_cache.__class__.__name__
+        "PYNENC__CLIENT_DATA_STORE_CLS", app_instance.client_data_store.__class__.__name__
     )
     monkeypatch.setenv(
         "PYNENC__ORCHESTRATOR_CLS", app_instance.orchestrator.__class__.__name__

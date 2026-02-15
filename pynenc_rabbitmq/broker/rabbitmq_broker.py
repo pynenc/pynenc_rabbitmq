@@ -2,6 +2,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 from pynenc.broker.base_broker import BaseBroker
+from pynenc.identifiers.invocation_id import InvocationId
 
 from pynenc_rabbitmq.conf.config_broker import ConfigBrokerRabbitMq
 from pynenc_rabbitmq.util.rabbitmq_client import PynencRabbitMqClient
@@ -38,33 +39,35 @@ class RabbitMqBroker(BaseBroker):
         queue_name = f"{self.conf.rabbitmq_queue_prefix}_broker_messages"
         return self._client.get_queue(queue_name)
 
-    def send_message(self, invocation_id: str) -> None:
+    def send_message(self, invocation_id: InvocationId) -> None:
         """Send a message (invocation) to the queue."""
         self._message_queue.publish_message(invocation_id)
 
-    def route_invocation(self, invocation_id: str) -> None:
+    def route_invocation(self, invocation_id: InvocationId) -> None:
         """Route a single invocation by sending it to the message queue."""
         self.send_message(invocation_id)
 
-    def route_invocations(self, invocation_ids: list[str]) -> None:
+    def route_invocations(self, invocation_ids: list[InvocationId]) -> None:
         """Route multiple invocations by sending them to the message queue."""
         if not invocation_ids:
             return
 
-        self.app.logger.warning(
+        self.app.logger.info(
             f"Routing {len(invocation_ids)} invocations: {invocation_ids}"
         )
 
         for invocation_id in invocation_ids:
             self.send_message(invocation_id)
 
-    def retrieve_invocation(self) -> str | None:
+    def retrieve_invocation(self) -> InvocationId | None:
         """
         Retrieve a single invocation from the queue.
 
         :return: The next DistributedInvocation in the queue, or None if empty.
         """
-        return self._message_queue.consume_message()
+        if msg := self._message_queue.consume_message():
+            return InvocationId(msg)
+        return None
 
     def count_invocations(self) -> int:
         """Count the number of invocations in the queue."""
