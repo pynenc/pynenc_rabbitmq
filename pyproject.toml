@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "pynenc>=0.1.0rc101.dev151",
+    "pynenc>=0.1.0rc101.dev166",
     "pika==1.3.2",
 ]
 
@@ -55,10 +55,10 @@ dev = [
     "testcontainers[redis]>=4.13.0",
 ]
 tests = [
-    "pynenc[tests]>=0.1.0rc101.dev151",
+    "pynenc[tests]>=0.1.0rc101.dev166",
 ]
 monitor = [
-    "pynenc[monitor]>=0.1.0rc101.dev151",
+    "pynenc[monitor]>=0.1.0rc101.dev166",
 ]
 docs = [
     "sphinx>=7.0",
