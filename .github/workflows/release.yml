@@ -41,7 +41,7 @@ jobs:
         with:
           tag-template: "v{VERSION}"
           version-command: |
-            uv version --short
+            python -c "import tomllib, pathlib; print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])"
 
       - name: Extract bare version from tag
         id: extract-version
@@ -55,7 +55,7 @@ jobs:
         id: dev-version
         if: ${{ ! steps.check-version.outputs.tag }}
         run: |
-          current_version=$(uv version --short)
+          current_version=$(python -c "import tomllib, pathlib; print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")
           dev_version="${current_version}.dev$(date +%s)"
           sed -i "s/^version = \".*\"/version = \"${dev_version}\"/" pyproject.toml
           echo "version=$dev_version" >> $GITHUB_OUTPUT
