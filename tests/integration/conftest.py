@@ -5,6 +5,7 @@ This conftest provides fixtures for integration testing with a real RabbitMQ ins
 running in a Docker container.
 """
 
+import logging
 import os
 import tempfile
 from typing import TYPE_CHECKING
@@ -36,18 +37,29 @@ def rabbitmq_container() -> "Generator[RabbitMqContainer, None, None]":
     :return: Generator yielding a running RabbitMQ container
     :raises RuntimeError: If Docker is not running or accessible
     """
+    # Suppress noisy pika logs during container startup
+    # The testcontainers library tries to connect before RabbitMQ is ready,
+    # causing expected connection failures that are caught and retried
+    pika_logger = logging.getLogger("pika")
+    original_level = pika_logger.level
+    pika_logger.setLevel(logging.CRITICAL)
+
     try:
         container = RabbitMqContainer("rabbitmq:3.13-management")
         container.start()
 
-        # Debug: logger.info connection details
+        # Set to WARNING for tests (not CRITICAL) - still less noisy than INFO
+        pika_logger.setLevel(logging.WARNING)
+
+        # Get connection details
         host = container.get_container_host_ip()
+        # testcontainers exposes random ports, get the mapped AMQP port
         port = container.get_exposed_port(container.port)
+
         logger.info(f"\n{'=' * 80}")
         logger.info("RabbitMQ Container Started:")
         logger.info(f"  Host: {host}")
-        logger.info(f"  Port (exposed): {port}")
-        logger.info(f"  Port (internal): {container.port}")
+        logger.info(f"  Port (AMQP): {port}")
         logger.info(f"  Username: {container.username}")
         logger.info(f"  Virtual Host: {container.vhost}")
         logger.info(f"{'=' * 80}\n")
@@ -79,6 +91,9 @@ def rabbitmq_container() -> "Generator[RabbitMqContainer, None, None]":
             "Docker is not running or not accessible. "
             "Please start Docker to run integration tests."
         ) from e
+    finally:
+        # Restore original logging level
+        pika_logger.setLevel(original_level)
 
 
 @pytest.fixture(scope="function")
@@ -122,7 +137,7 @@ def app_instance_builder(
     host = rabbitmq_container.get_container_host_ip()
     port = int(rabbitmq_container.get_exposed_port(rabbitmq_container.port))
 
-    logger.info(f"\nConfiguring app with RabbitMQ: {host}:{port}")
+    logger.info(f"\nConfiguring app with RabbitMQ AMQP broker: {host}:{port}")
 
     # Use .rabbitmq_broker() method (not .rabbitmq())
     builder = (

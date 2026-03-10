@@ -1,5 +1,6 @@
 """Simple RabbitMQ client for Pynenc."""
 
+import logging
 import threading
 from typing import TYPE_CHECKING
 
@@ -23,8 +24,18 @@ class PynencRabbitMqClient:
 
     def __init__(self, conf: "ConfigRabbitMq") -> None:
         self.conf = conf
+        # Configure pika logging level to reduce noise
+        self._configure_pika_logging()
         # ConnectionManager handles thread-local connections internally
         self._connection_manager = ConnectionManager(conf)
+
+    def _configure_pika_logging(self) -> None:
+        """Configure pika library logging level based on configuration."""
+        pika_logger = logging.getLogger("pika")
+        log_level = getattr(
+            logging, self.conf.rabbitmq_pika_log_level.upper(), logging.WARNING
+        )
+        pika_logger.setLevel(log_level)
 
     @classmethod
     def get_instance(cls, conf: "ConfigRabbitMq") -> "PynencRabbitMqClient":

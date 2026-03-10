@@ -1,1 +1,3 @@
-from pynenc_tests.unit.broker.test_broker_all_instances import *
+"""Unit tests for Pynenc broker with RabbitMQ implementation."""
+
+from pynenc_tests.unit.broker.all_tests import *
