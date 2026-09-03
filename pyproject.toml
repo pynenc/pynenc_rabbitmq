@@ -22,9 +22,6 @@ dependencies = [
     "pika==1.3.2",
 ]
 
-[tool.uv.sources]
-pynenc = { path = "../pynenc", editable = true }
-
 [[tool.uv.index]]
 name = "testpypi"
 url = "https://test.pypi.org/simple/"
