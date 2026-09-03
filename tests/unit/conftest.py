@@ -24,17 +24,24 @@ class MockRabbitMqQueue:
     """In-memory mock implementation of RabbitMQ queue for unit testing."""
 
     def __init__(self) -> None:
-        self.messages: deque[dict[str, Any]] = deque()
+        self.messages: deque[tuple[int, str]] = deque()
         self.setup_called = False
 
-    def publish_message(self, message: dict[str, Any]) -> bool:
+    def publish_message(self, message: str, priority: int | None = None) -> bool:
         """Mock publish message."""
-        self.messages.append(message)
+        self.messages.append((priority or 0, message))
         return True
 
-    def consume_message(self) -> dict[str, Any] | None:
+    def consume_message(self) -> str | None:
         """Mock consume message."""
-        return self.messages.popleft() if self.messages else None
+        if not self.messages:
+            return None
+        highest_priority = max(priority for priority, _ in self.messages)
+        for index, (priority, message) in enumerate(self.messages):
+            if priority == highest_priority:
+                del self.messages[index]
+                return message
+        return None
 
     def get_message_count(self) -> int:
         """Mock get message count."""
@@ -80,11 +87,11 @@ class MockQueueManager:
         self.spec = spec
         self._queue = MockRabbitMqQueue()
 
-    def publish_message(self, message: dict[str, Any]) -> bool:
+    def publish_message(self, message: str, priority: int | None = None) -> bool:
         """Mock publish message."""
-        return self._queue.publish_message(message)
+        return self._queue.publish_message(message, priority=priority)
 
-    def consume_message(self) -> dict[str, Any] | None:
+    def consume_message(self) -> str | None:
         """Mock consume message."""
         return self._queue.consume_message()
 

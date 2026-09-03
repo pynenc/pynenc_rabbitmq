@@ -50,7 +50,7 @@ class QueueManager:
             **retry_config,
         )
 
-    def publish_message(self, message: str) -> bool:
+    def publish_message(self, message: str, priority: int | None = None) -> bool:
         """
         Publish a message to the queue with retry logic.
 
@@ -62,10 +62,13 @@ class QueueManager:
             try:
                 with self._connection_manager.get_channel() as channel:
                     channel.queue_declare(
-                        queue=self._spec.name, durable=self._spec.durable
+                        queue=self._spec.name,
+                        durable=self._spec.durable,
+                        arguments=self._spec.declaration_arguments,
                     )
                     properties = pika.BasicProperties(
-                        delivery_mode=2 if self._spec.durable else 1
+                        delivery_mode=2 if self._spec.durable else 1,
+                        priority=priority,
                     )
                     channel.basic_publish(
                         exchange=self._spec.exchange,
@@ -97,7 +100,9 @@ class QueueManager:
             try:
                 with self._connection_manager.get_channel() as channel:
                     channel.queue_declare(
-                        queue=self._spec.name, durable=self._spec.durable
+                        queue=self._spec.name,
+                        durable=self._spec.durable,
+                        arguments=self._spec.declaration_arguments,
                     )
                     method, _, body = channel.basic_get(
                         queue=self._spec.name, auto_ack=True
@@ -126,7 +131,9 @@ class QueueManager:
         def _count() -> int:
             with self._connection_manager.get_channel() as channel:
                 result = channel.queue_declare(
-                    queue=self._spec.name, durable=self._spec.durable, passive=True
+                    queue=self._spec.name,
+                    durable=self._spec.durable,
+                    passive=True,
                 )
                 return result.method.message_count
 
@@ -141,7 +148,11 @@ class QueueManager:
 
         def _purge() -> int:
             with self._connection_manager.get_channel() as channel:
-                channel.queue_declare(queue=self._spec.name, durable=self._spec.durable)
+                channel.queue_declare(
+                    queue=self._spec.name,
+                    durable=self._spec.durable,
+                    arguments=self._spec.declaration_arguments,
+                )
                 result = channel.queue_purge(queue=self._spec.name)
                 return result.method.message_count
 

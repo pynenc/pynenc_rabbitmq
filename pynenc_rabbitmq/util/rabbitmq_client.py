@@ -58,14 +58,16 @@ class PynencRabbitMqClient:
         """Generate a unique connection key based on configuration."""
         return f"{conf.rabbitmq_host}:{conf.rabbitmq_port}:{conf.rabbitmq_virtual_host}"
 
-    def get_queue(self, queue_name: str) -> QueueManager:
+    def get_queue(
+        self, queue_name: str, max_priority: int | None = None
+    ) -> QueueManager:
         """
         Get a queue manager for the specified queue.
 
         :param queue_name: Name of the queue
         :return: Queue manager instance
         """
-        spec = QueueSpec(name=queue_name, durable=True)
+        spec = QueueSpec(name=queue_name, durable=True, max_priority=max_priority)
         return QueueManager(self._connection_manager, spec)
 
     def close(self) -> None:

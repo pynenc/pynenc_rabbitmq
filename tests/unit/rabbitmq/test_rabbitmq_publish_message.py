@@ -74,6 +74,7 @@ def test_publish_message_should_declare_queue_and_publish(
     mock_channel.queue_declare.assert_called_once_with(
         queue=queue_spec.name,
         durable=queue_spec.durable,
+        arguments=queue_spec.declaration_arguments,
     )
     mock_channel.basic_publish.assert_called_once()
 
