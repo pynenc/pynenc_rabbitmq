@@ -19,9 +19,9 @@ pip install pynenc-rabbitmq
 
 ## Component
 
-| Component  | Class            | Role                                                                |
-| ---------- | ---------------- | ------------------------------------------------------------------- |
-| **Broker** | `RabbitMqBroker` | Persistent FIFO queue with publisher confirms and automatic retries |
+| Component  | Class            | Role                                                 |
+| ---------- | ---------------- | ---------------------------------------------------- |
+| **Broker** | `RabbitMqBroker` | Durable named priority queues with automatic retries |
 
 ---
 

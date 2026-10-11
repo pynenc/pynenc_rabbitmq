@@ -40,9 +40,9 @@ def test_rabbitmq_client_can_connect(app_instance: "Pynenc") -> None:
     # Get the broker's RabbitMQ client
     broker = app_instance.broker
 
-    # The broker should have a _message_queue attribute (QueueManager)
+    # Resolve the QueueManager for the logical default queue.
     assert isinstance(broker, RabbitMqBroker)
-    queue_manager = broker._message_queue
+    queue_manager = broker._message_queue("default")
 
     # Try to get a connection through the queue manager
     try:
@@ -57,7 +57,7 @@ def test_rabbitmq_client_can_publish_and_consume(app_instance: "Pynenc") -> None
     """Test that we can publish and consume messages."""
     broker = app_instance.broker
     assert isinstance(broker, RabbitMqBroker)
-    queue_manager = broker._message_queue
+    queue_manager = broker._message_queue("default")
 
     # Test message
     test_message = "some-data"
@@ -80,7 +80,7 @@ def test_rabbitmq_queue_operations(app_instance: "Pynenc") -> None:
     """Test queue count and purge operations."""
     broker = app_instance.broker
     assert isinstance(broker, RabbitMqBroker)
-    queue_manager = broker._message_queue
+    queue_manager = broker._message_queue("default")
 
     # Purge queue first
     initial_purge = queue_manager.purge_queue()

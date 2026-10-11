@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://pynenc.org/assets/img/pynenc_logo.png" alt="Pynenc" width="300">
+  <img src="https://raw.githubusercontent.com/pynenc/pynenc/main/docs/_static/logo.png" alt="Pynenc" width="300">
 </p>
 <h1 align="center">Pynenc RabbitMQ Plugin</h1>
 <p align="center">
@@ -34,9 +34,9 @@ The `pynenc-rabbitmq` plugin adds a durable RabbitMQ message broker to [Pynenc](
 
 ## Component
 
-| Component  | Class            | Role                                                                |
-| ---------- | ---------------- | ------------------------------------------------------------------- |
-| **Broker** | `RabbitMqBroker` | Persistent FIFO queue with publisher confirms and automatic retries |
+| Component  | Class            | Role                                                              |
+| ---------- | ---------------- | ----------------------------------------------------------------- |
+| **Broker** | `RabbitMqBroker` | Durable named queues with native priorities and automatic retries |
 
 ## Installation
 
@@ -85,6 +85,13 @@ app = (
 
 ## Configuration
 
+### Queues and Priorities
+
+Each Pynenc logical queue maps to a durable RabbitMQ queue. Pynenc priorities
+from `-100.0` through `100.0` are normalized into RabbitMQ's native `0` through
+`255` integer range. The conversion is lossy, so close float priorities can
+share a RabbitMQ bucket; messages in the same bucket retain FIFO ordering.
+
 ### Builder Parameters
 
 ```python
@@ -118,8 +125,8 @@ PYNENC__RABBITMQ__VIRTUAL_HOST="/"
 
 ## Requirements
 
-- Python >= 3.11
-- Pynenc >= 0.1.0
+- Python >= 3.12
+- Pynenc >= 0.4.0
 - pika >= 1.3.2
 - A running RabbitMQ server
 - A Redis or MongoDB plugin for the remaining Pynenc components

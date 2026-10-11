@@ -3,6 +3,14 @@
 All settings can be provided via the builder, environment variables, or YAML config files.
 See the [Pynenc configuration guide](https://pynenc.readthedocs.io/en/latest/configuration/index.html) for the general mechanism.
 
+## Pynenc Queues and Priorities
+
+Each logical queue is declared as a durable RabbitMQ priority queue. Pynenc's
+finite float range `-100.0` through `100.0` is normalized to RabbitMQ's native
+integer range `0` through `255`. This mapping is intentionally lossy: close
+Pynenc priorities can share one RabbitMQ priority bucket and then remain FIFO.
+Non-finite and out-of-range values are rejected before publication.
+
 ## Connection Settings — `ConfigRabbitMq`
 
 | Setting                        | Type    | Default       | Description                                        |
