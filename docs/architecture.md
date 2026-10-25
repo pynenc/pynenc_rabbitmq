@@ -29,14 +29,15 @@ growing from 1 s up to 60 s. Set a positive value to limit retries.
 
 ## Queue Naming
 
-The broker message queue is named:
+Each logical broker queue is named:
 
 ```
-{queue_prefix}_broker_messages
+{queue_prefix}_{app_id_hash}_broker_{logical_queue}
 ```
 
-Default: `pynenc_broker_messages`. The queue prefix can be changed per-environment
-to isolate staging and production queues on a shared broker.
+The compact, stable app-ID hash prevents applications sharing a RabbitMQ virtual
+host from consuming each other's work without allowing long app IDs to exceed
+RabbitMQ's queue-name limit. The queue prefix can still isolate environments.
 
 ## Logging
 

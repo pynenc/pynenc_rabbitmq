@@ -18,7 +18,6 @@ from typing import TypeVar
 import pika.exceptions
 
 logger = logging.getLogger(__name__)
-
 T = TypeVar("T")
 
 # Exceptions that indicate a recoverable connection issue
